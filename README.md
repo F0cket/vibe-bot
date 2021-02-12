@@ -12,7 +12,7 @@ Commands
 
 Installation
 =====
-* pip install requirements.txt
+* pip install -r requirements.txt
 * Edit the praw.ini file accordingly. [Info](https://asyncpraw.readthedocs.io/en/latest/getting_started/configuration/prawini.html#using-interpolation)
 * Edit the DiscordToken.txt file to include your Discord Application's Bot Token
 
