@@ -5,6 +5,7 @@ import time
 import random
 from datetime import datetime
 
+
 r = asyncpraw.Reddit("vibe-bot",user_agent = "meme_grabber v1.0")
 bot = commands.Bot(command_prefix='!')
 usedMemesID = []
@@ -36,21 +37,27 @@ async def dankMeme():
             return url
 
 
-@bot.command(name='vibecheck', help='Ensure your vibe is in check.')
-async def vibecheck(message):
-    await message.send("VIBECHECK! :gun: :gun: :gun:")
-    time.sleep(1)
-    if random.randint(1,3) == 1:
-        await message.send("{} failed the vibecheck.".format(message.author.name))
+@bot.command(name='vibecheck', help='Check your own vibe or mention another user to check theirs.')
+async def vibecheck(ctx, mentioned):
+    user = await bot.fetch_user(mentioned[3:-1])
+    if mentioned.startswith("<@!"):
+        await ctx.send("VIBECHECK! :gun: :gun: :gun:")
+        time.sleep(1)
+        if random.randint(1,3) == 1:
+            await ctx.send("{} failed the vibecheck.".format(user.name))
+        else:
+            await ctx.send("{} passed the vibecheck.".format(user.name))
     else:
-        await message.send("{} passed the vibecheck.".format(message.author.name))
+        await ctx.send("Make sure to mention a user when running the command.")
 
 
 @bot.event
 async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        await ctx.send("Sorry {}. I need {} more minutes to get another meme. Reddit doesn't like me scraping images so quickly.".format(ctx.author.name, round(round(error.retry_after)/60)))
-
+    if isinstance(error, commands.CommandOnCooldown) and ctx.invoked_with == "meme" or ctx.invoked_with == "starmeme":
+        await ctx.send("Sorry {}. I need {} more seconds to get another meme. Reddit doesn't like me scraping images so quickly.".format(ctx.author.name, round(error.retry_after)))
+    if isinstance(error, commands.MissingRequiredArgument) and ctx.invoked_with == "vibecheck":
+        await vibecheck(ctx, ctx.message.author.mention.replace("<@", "<@!"))
+    raise error
 
 
 @bot.command(name='starmeme',help = "Get a meme from the starwars subreddit.")
