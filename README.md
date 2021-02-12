@@ -1,7 +1,7 @@
 # Vibe-Bot
-Vibe bot is a discord bot that does many things.
+Vibe Bot is a discord bot that does many things.
 
-__Vibe-Bot is not publically hosted at this time. You will need to host it yourself.__
+__Vibe Bot is not publically hosted at this time. You will need to host it yourself.__
 
 Commands
 =====
