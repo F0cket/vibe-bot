@@ -49,6 +49,8 @@ async def on_message(message):
 @bot.command(name='vibecheck', help='Check your own vibe or mention another user to check theirs.')
 async def vibecheck(ctx, mentioned):
     user = await bot.fetch_user(mentioned[3:-1])
+    if user.name.startswith("!"):
+        user.replace("!","")
     if mentioned.startswith("<@!"):
         await ctx.send("VIBECHECK! :gun: :gun: :gun:")
         time.sleep(1)
@@ -65,7 +67,7 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown) and ctx.invoked_with == "meme" or ctx.invoked_with == "starmeme":
         await ctx.send("Sorry {}. I need {} more seconds to get another meme. Reddit doesn't like me scraping images so quickly.".format(ctx.author.name, round(error.retry_after)))
     if isinstance(error, commands.MissingRequiredArgument) and ctx.invoked_with == "vibecheck":
-        await vibecheck(ctx, ctx.message.author.mention.replace("<@", "<@!"))
+        await vibecheck(ctx, ctx.message.author.mention))
     raise error
 
 
