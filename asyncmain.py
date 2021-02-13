@@ -37,6 +37,15 @@ async def dankMeme():
             return url
 
 
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    if not message.content.startswith("!") and random.randint(1,200) == 1:
+        await message.add_reaction("⭐")
+        await message.channel.send("Congratulations {}, your message is vibe-bot certified. Take this star as your reward. ⭐ It has no value.".format(message.author.name))
+    await bot.process_commands(message)
+
 @bot.command(name='vibecheck', help='Check your own vibe or mention another user to check theirs.')
 async def vibecheck(ctx, mentioned):
     user = await bot.fetch_user(mentioned[3:-1])
