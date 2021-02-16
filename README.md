@@ -26,7 +26,12 @@ Permissions Needed
 * Voice Channel Speak
 * Voice Channel Use Voice Activity
 
+Known Issues
+=====
+* Currently, vibe bot retrieves the top 15 posts from the "hot" tab of the selected subreddit. It also adds the post id to a list and compares the 15 retrieved posts against it to prevent posting duplicates. If the command has been run 15 times before new posts are made to the subreddit, no meme will be posted until a new post is made on reddit. 
+
 Todo
 =====
 * Publically host vibe-bot
 * Implement more features
+* Fix meme command limitation
