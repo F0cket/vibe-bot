@@ -36,7 +36,7 @@ async def listVibeStats(vibes):
     message = ""
     for i in vibes:
         user = await bot.fetch_user(i)
-        message += "{} -> {}\n".format(user.name, vibePercentageCalc(i))
+        message += "{} -> {} good vibes\n".format(user.name, vibePercentageCalc(i))
     return message
 
 bot = commands.Bot(command_prefix='!')
@@ -65,6 +65,7 @@ async def vibecheck(ctx, mentioned):
 async def vibestats(ctx):
     message = await listVibeStats(vibes)
     await ctx.channel.send("Current Vibes\n\n" + message)
+    print("[VIBESTATS] Author:", ctx.author)
 
 @bot.event
 async def on_command_error(ctx, error):
