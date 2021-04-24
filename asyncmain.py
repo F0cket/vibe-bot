@@ -1,8 +1,36 @@
+#usr/bin/env python
+
 import discord
 import time
 import random
+import ast
 from discord.ext import commands
 
+def parseUser(mentioned):
+    ID = mentioned
+    ID = ID.replace("<", "")
+    ID = ID.replace("!", "")
+    ID = ID.replace(">", "")
+    ID = ID.replace("@", "")
+    return ID
+
+def writeVibes():
+    with open("vibes.txt", 'w') as vibeFile:
+        vibeFile.write(str(vibes))
+
+def readVibes():
+    with open("vibes.txt", 'r') as vibeFile:
+        vibesString = vibeFile.read()
+        return ast.literal_eval(vibesString)
+
+def vibePercentageCalc(ID):
+    vibeValueList = vibes[ID]
+    return "{:.1%}".format(vibeValueList[0]/(vibeValueList[0] + vibeValueList[1]))
+
+def setVibes(ID,PF):
+    vibeValueList = vibes[ID]
+    vibeValueList[PF] += 1
+    writeVibes()
 
 bot = commands.Bot(command_prefix='!')
 
@@ -11,19 +39,19 @@ with open("DiscordToken.txt",'r') as tokenFile:
 
 @bot.command(name='vibecheck', help='Check your own vibe or mention another user to check theirs.')
 async def vibecheck(ctx, mentioned):
-    ID = mentioned
-    ID = ID.replace("<", "")
-    ID = ID.replace("!", "")
-    ID = ID.replace(">", "")
-    ID = ID.replace("@", "")
+    ID = parseUser(mentioned)
     user = await bot.fetch_user(ID)
     print("[VIBECHECK] Author:", ctx.author, "Mentioned:",mentioned, "Name:", user.name)
+    if ID not in vibes:
+        vibes[ID] = [0,0]
     await ctx.channel.send("VIBECHECK! :gun: :gun: :gun:")
     time.sleep(1)
     if random.randint(1,2) == 1:
-        await ctx.channel.send("{} failed the vibecheck.".format(user.name))
+        setVibes(ID, 1)
+        await ctx.channel.send("{} failed the vibecheck. You have {} good vibes.".format(user.name, vibePercentageCalc(ID)))
     else:
-        await ctx.channel.send("{} passed the vibecheck.".format(user.name))
+        setVibes(ID, 0)
+        await ctx.channel.send("{} passed the vibecheck. You have {} good vibes.".format(user.name, vibePercentageCalc(ID)))
     print("[VIBECHECK COMPLETE] Author:", ctx.author, "Mentioned:",mentioned, "Name:", user.name)
 
 @bot.event
@@ -42,5 +70,5 @@ async def on_message(message):
         time.sleep(2)
     await bot.process_commands(message)
 
-    
+vibes = readVibes()
 bot.run(token)
