@@ -32,6 +32,13 @@ def setVibes(ID,PF):
     vibeValueList[PF] += 1
     writeVibes()
 
+async def listVibeStats(vibes):
+    message = ""
+    for i in vibes:
+        user = await bot.fetch_user(i)
+        message += "{} -> {}\n".format(user.name, vibePercentageCalc(i))
+    return message
+
 bot = commands.Bot(command_prefix='!')
 
 with open("DiscordToken.txt",'r') as tokenFile:
@@ -53,6 +60,11 @@ async def vibecheck(ctx, mentioned):
         setVibes(ID, 0)
         await ctx.channel.send("{} passed the vibecheck. You have {} good vibes.".format(user.name, vibePercentageCalc(ID)))
     print("[VIBECHECK COMPLETE] Author:", ctx.author, "Mentioned:",mentioned, "Name:", user.name)
+
+@bot.command(name='vibestats', help="Check the vibe percentages")
+async def vibestats(ctx):
+    message = await listVibeStats(vibes)
+    await ctx.channel.send("Current Vibes\n\n" + message)
 
 @bot.event
 async def on_command_error(ctx, error):
