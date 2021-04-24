@@ -50,7 +50,7 @@ async def vibecheck(ctx, mentioned):
     user = await bot.fetch_user(ID)
     print("[VIBECHECK] Author:", ctx.author, "Mentioned:",mentioned, "Name:", user.name)
     if ID not in vibes:
-        vibes[ID] = [0,0]
+        vibes[ID] = [1,1]
     await ctx.channel.send("VIBECHECK! :gun: :gun: :gun:")
     time.sleep(1)
     if random.randint(1,2) == 1:
