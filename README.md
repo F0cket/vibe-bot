@@ -6,6 +6,7 @@ __Vibe Bot is not publically hosted at this time. You will need to host it yours
 Commands
 =====
 * *!vibecheck* **Performs a vibecheck**
+* *!vibestats* **Check all users vibe percents**
 
 Installation
 =====
