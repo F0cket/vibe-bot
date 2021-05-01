@@ -68,7 +68,7 @@ async def vibecheck(ctx, mentioned):
 
 @bot.command(name='vibestats', help="Check the vibe percentages")
 async def vibestats(ctx):
-    message = await listVibeStats(vibes)
+    message = await listVibeStats()
     await ctx.channel.send("Current Vibes\n\n" + message)
     print("[VIBESTATS] Author:", ctx.author)
 
@@ -90,4 +90,5 @@ async def on_message(message):
 
 vibes = readVibes()
 percentDict = {}
+vibePercentageFill()
 bot.run(token)
