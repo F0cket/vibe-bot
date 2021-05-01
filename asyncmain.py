@@ -89,5 +89,5 @@ async def on_message(message):
     await bot.process_commands(message)
 
 vibes = readVibes()
-vibePercentageFill()
+percentDict = {}
 bot.run(token)
