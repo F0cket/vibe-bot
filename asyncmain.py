@@ -1,4 +1,4 @@
-#usr/bin/env python
+#usr/bin/python3
 
 import discord
 import time
@@ -23,20 +23,23 @@ def readVibes():
         vibesString = vibeFile.read()
         return ast.literal_eval(vibesString)
 
-def vibePercentageCalc(ID):
-    vibeValueList = vibes[ID]
-    return "{:.1%}".format(vibeValueList[0]/(vibeValueList[0] + vibeValueList[1]))
+def vibePercentageFill():
+    for x in vibes:
+        percentDict[x] = ("{:.1f}".format((vibes[x][0]/(vibes[x][0] + vibes[x][1])) * 100))
 
 def setVibes(ID,PF):
     vibeValueList = vibes[ID]
     vibeValueList[PF] += 1
     writeVibes()
 
-async def listVibeStats(vibes):
+async def listVibeStats():
     message = ""
-    for i in vibes:
-        user = await bot.fetch_user(i)
-        message += "{} -> {} good vibes\n".format(user.name, vibePercentageCalc(i))
+    x = 1
+    sortedDict = sorted(percentDict.items(), key = lambda kv:(kv[1], kv[0]),reverse=True)
+    for i in sortedDict:
+        user = await bot.fetch_user(i[0])
+        message += "{}. {} -> {} good vibes.\n".format(x, user.name, i[1])
+        x += 1
     return message
 
 bot = commands.Bot(command_prefix='!')
@@ -59,7 +62,9 @@ async def vibecheck(ctx, mentioned):
     else:
         setVibes(ID, 0)
         await ctx.channel.send("{} passed the vibecheck. You have {} good vibes.".format(user.name, vibePercentageCalc(ID)))
+    vibePercentageFill()
     print("[VIBECHECK COMPLETE] Author:", ctx.author, "Mentioned:",mentioned, "Name:", user.name)
+
 
 @bot.command(name='vibestats', help="Check the vibe percentages")
 async def vibestats(ctx):
@@ -84,4 +89,5 @@ async def on_message(message):
     await bot.process_commands(message)
 
 vibes = readVibes()
+percentVibes = {}
 bot.run(token)
