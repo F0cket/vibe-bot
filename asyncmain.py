@@ -26,6 +26,10 @@ def readVibes():
 def vibePercentageFill():
     for x in vibes:
         percentDict[x] = ("{:.1f}".format((vibes[x][0]/(vibes[x][0] + vibes[x][1])) * 100))
+        
+def vibePercentageCalc(ID):
+    vibeValueList = vibes[ID]
+    return "{:.1%}".format(vibeValueList[0]/(vibeValueList[0] + vibeValueList[1]))
 
 def setVibes(ID,PF):
     vibeValueList = vibes[ID]
