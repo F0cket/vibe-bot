@@ -14,12 +14,14 @@ def parseUser(mentioned):
     ID = ID.replace("@", "")
     return ID
 
-def writeVibes():
-    with open("vibes.txt", 'w') as vibeFile:
+def writeVibes(serverName):
+    serverFile = serverName + "_vibes.txt"
+    with open(serverFile, 'w') as vibeFile:
         vibeFile.write(str(vibes))
 
-def readVibes():
-    with open("vibes.txt", 'r') as vibeFile:
+def readVibes(serverName):
+    serverFile = serverName + "_vibes.txt"
+    with open(serverFile, 'r') as vibeFile:
         vibesString = vibeFile.read()
         return ast.literal_eval(vibesString)
 
@@ -31,12 +33,13 @@ def vibePercentageCalc(ID):
     vibeValueList = vibes[ID]
     return "{:.1%}".format(vibeValueList[0]/(vibeValueList[0] + vibeValueList[1]))
 
-def setVibes(ID,PF):
+def setVibes(ID,PF,serverName):
     vibeValueList = vibes[ID]
     vibeValueList[PF] += 1
-    writeVibes()
+    writeVibes(serverName)
 
-async def listVibeStats():
+async def listVibeStats(serverName):
+    vibes = readVibes(serverName)
     message = ""
     x = 1
     sortedDict = sorted(percentDict.items(), key = lambda kv:(kv[1], kv[0]),reverse=True)
@@ -61,10 +64,10 @@ async def vibecheck(ctx, mentioned):
     await ctx.channel.send("VIBECHECK! :gun: :gun: :gun:")
     time.sleep(1)
     if random.randint(1,2) == 1:
-        setVibes(ID, 1)
+        setVibes(ID, 1, ctx.guild.name)
         await ctx.channel.send("{} failed the vibecheck. You have {} good vibes.".format(user.name, vibePercentageCalc(ID)))
     else:
-        setVibes(ID, 0)
+        setVibes(ID, 0, ctx.guild.name)
         await ctx.channel.send("{} passed the vibecheck. You have {} good vibes.".format(user.name, vibePercentageCalc(ID)))
     vibePercentageFill()
     print("[VIBECHECK COMPLETE] Author:", ctx.author, "Mentioned:",mentioned, "Name:", user.name)
@@ -72,7 +75,7 @@ async def vibecheck(ctx, mentioned):
 
 @bot.command(name='vibestats', help="Check the vibe percentages")
 async def vibestats(ctx):
-    message = await listVibeStats()
+    message = await listVibeStats(ctx.guild.name)
     await ctx.channel.send("Current Vibes\n\n" + message)
     print("[VIBESTATS] Author:", ctx.author)
 
@@ -92,7 +95,6 @@ async def on_message(message):
         time.sleep(2)
     await bot.process_commands(message)
 
-vibes = readVibes()
 percentDict = {}
 vibePercentageFill()
 bot.run(token)
