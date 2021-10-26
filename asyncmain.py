@@ -56,6 +56,7 @@ with open("DiscordToken.txt",'r') as tokenFile:
 
 @bot.command(name='vibecheck', help='Check your own vibe or mention another user to check theirs.')
 async def vibecheck(ctx, mentioned):
+    vibes = readVibes(ctx.guild.name)
     ID = parseUser(mentioned)
     user = await bot.fetch_user(ID)
     print("[VIBECHECK] Author:", ctx.author, "Mentioned:",mentioned, "Name:", user.name)
