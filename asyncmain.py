@@ -20,10 +20,14 @@ def writeVibes(serverName):
         vibeFile.write(str(vibes))
 
 def readVibes(serverName):
-    serverFile = serverName + "_vibes.txt"
-    with open(serverFile, 'r') as vibeFile:
-        vibesString = vibeFile.read()
-        return ast.literal_eval(vibesString)
+    try:
+        serverFile = serverName + "_vibes.txt"
+        with open(serverFile, 'r') as vibeFile:
+            vibesString = vibeFile.read()
+            return ast.literal_eval(vibesString)
+    except:
+        open(serverFile, 'x')
+        readVibes(serverName)
 
 def vibePercentageFill(serverName):
     vibes = readVibes(serverName)
