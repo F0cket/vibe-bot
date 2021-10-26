@@ -25,7 +25,8 @@ def readVibes(serverName):
         vibesString = vibeFile.read()
         return ast.literal_eval(vibesString)
 
-def vibePercentageFill():
+def vibePercentageFill(serverName):
+    vibes = readVibes(serverName)
     for x in vibes:
         percentDict[x] = ("{:.1f}".format((vibes[x][0]/(vibes[x][0] + vibes[x][1])) * 100))
         
@@ -76,6 +77,7 @@ async def vibecheck(ctx, mentioned):
 
 @bot.command(name='vibestats', help="Check the vibe percentages")
 async def vibestats(ctx):
+    vibePercentageFill(ctx.guild.name)
     message = await listVibeStats(ctx.guild.name)
     await ctx.channel.send("Current Vibes\n\n" + message)
     print("[VIBESTATS] Author:", ctx.author)
@@ -97,5 +99,4 @@ async def on_message(message):
     await bot.process_commands(message)
 
 percentDict = {}
-vibePercentageFill()
 bot.run(token)
